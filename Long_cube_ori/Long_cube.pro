@@ -34,7 +34,3 @@ HEADERS += \
 
 FORMS += \
         widget.ui
-
-RESOURCES += \
-    sorce.qrc
-

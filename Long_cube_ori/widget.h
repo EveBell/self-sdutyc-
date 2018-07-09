@@ -37,12 +37,10 @@ public:
     explicit Widget(QWidget *parent = 0);
     ~Widget();
     void InitGame();
-    //void InitGame2();
     void StartGame();
     void GameOver();
     void ResetBlock();
     void CreatBlock(int block[4][4],int ID);
-    void CreatColor(QBrush brushx,int color_id);
     bool isCollide(int x,int y,Direction Dir);
     void BlockRotate(int block[4][4]);
     void BlockMove(Direction Dir);
@@ -57,9 +55,7 @@ private:
     QPainter *painter;
     QPushButton *button_start;
     QPushButton *button_stop;
-    QBrush cur_brush;
-    QBrush next_brush;
-    QPixmap pixmap;
+    QBrush *brush;
 private:
     int game_area[AREA_ROW][AREA_COL];
     block_pos pos_point;
@@ -68,13 +64,10 @@ private:
     Border cur_Border;
     bool isStable;
     int score=0;
-    int gate=0;//关卡
-    double score_point=1.0;
     int game_timer;//下落的计时器
     int paint_timer;//画方块的
     int speed_ms;//下落速度
     int refresh_ms;//刷新速度
-    //bool flag_gate=0;
 };
 
 #endif // WIDGET_H

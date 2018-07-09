@@ -7,39 +7,21 @@
 #include <QMessageBox>
 #include <QPen>
 #include <QBrush>
-#include <QIcon>
-#include <QString>
-#include <QPixmap>
-#include <QColor>
-#include <QFont>
 Widget::Widget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Widget)
 {
     ui->setupUi(this);
     setFixedSize(640,700);
-    QIcon start_icon(":/new/prefix1/button/button_start.png");
-    button_start=new QPushButton(this);
-    button_start->setMinimumSize(100,45);
-    button_start->setMaximumSize(100,45);
-    button_start->setIcon(start_icon);
-    button_start->setIconSize(QSize(100,45));
+    button_start=new QPushButton("START",this);
     button_start->move(468,330);
     connect(button_start,&QPushButton::pressed,this,InitGame);
-
-    QIcon stop_icon(":/new/prefix1/button/button_stop.png");
-    button_stop=new QPushButton(this);
-    button_stop->setMinimumSize(100,45);
-    button_stop->setMaximumSize(100,45);
-    button_stop->setIcon(stop_icon);
-    button_stop->setIconSize(QSize(100,45));
+    button_stop=new QPushButton("STOP",this);
     button_stop->move(468,380);
 
     for(int i=0;i<AREA_ROW;i++)
         for(int j=0;j<AREA_COL;j++)
             game_area[i][j]=0;
-    setFocusPolicy(Qt::ClickFocus);
-
 }
 int item1[4][4]=
 {
@@ -90,7 +72,6 @@ int item7[4][4]=
     {0,1,1,0},
     {0,0,0,0}
 };
-
 block_pos::block_pos()
 {
     pos_x=0;
@@ -116,61 +97,29 @@ void Widget::paintEvent(QPaintEvent *event)
 {
     painter=new QPainter;
     painter->begin(this);
-    QFont font;
 
-    font.setPointSize(13);
-    font.setWeight(40);
-    painter->setFont(font);
+    //painter->setBrush(QBrush(Qt::red,Qt::SolidPattern));
 
-/*    if(flag_gate==0)
-    {
-        QPixmap pixmap(":/new/prefix1/background/bg6.png");
-        painter->drawRect(0,0,640,700);//外边框
-        painter->drawPixmap(0,0,640,700,pixmap);
-    }
-    if(flag_gate==1)
-    {
-        QPixmap pixmap(":/new/prefix1/background/bg1.jpg");
-        painter->drawRect(0,0,640,700);//外边框
-        painter->drawPixmap(0,0,640,700,pixmap);
-    }
-   // painter->drawRect(0,0,640,700);//外边框
-   // painter->drawPixmap(0,0,640,700,pixmap);*/
-   // QPixmap pixmapp(pixmap);
-    painter->drawRect(0,0,640,700);
-    //painter->drawPixmap(0,0,640,700,pixmap);
+    painter->drawRect(0,0,640,700);//外边框
+
     painter->setPen(QPen(Qt::black,3,Qt::SolidLine));
     painter->drawRect(40,40,BLOCK_SIZE*AREA_COL,BLOCK_SIZE*AREA_ROW);//游戏区域
     painter->drawRect(440,60,BLOCK_SIZE*6,BLOCK_SIZE*8);//预告区域
-    painter->drawText(460,300,"显示关卡：");
-    QString str1;
-    str1.setNum(gate);
-    painter->drawText(550,300,str1);
-    painter->drawText(460,500,"分数：");
-    QString str2;
-    str2.setNum(score);
-    painter->drawText(520,500,str2);
-    painter->drawText(460,540,"剩余时间：");
+    painter->drawText(440,300,"显示关卡：");
+    painter->drawText(440,500,"分数：");
+    painter->drawText(440,540,"剩余时间：");
 
-    //QRadialGradient radialGradient()
     for(int i=0;i<AREA_ROW;i++)
         for(int j=0;j<AREA_COL;j++)
         {
-            cur_brush.setStyle(Qt::SolidPattern);
-            painter->setBrush(cur_brush);
             if(game_area[i][j]==1)
             {
-
-                painter->setBrush(QBrush(Qt::red,Qt::SolidPattern));
-
+               // brush->setColor(Qt::red);
+              //  painter->setBrush(*brush);
                 painter->drawRect(j*BLOCK_SIZE+40,i*BLOCK_SIZE+40,BLOCK_SIZE,BLOCK_SIZE);
             }
             else if(game_area[i][j]==2)
             {
-
-                painter->setBrush(QBrush(Qt::green,Qt::SolidPattern));
-                //cur_brush.setStyle(Qt::SolidPattern);
-                //painter->setBrush(cur_brush);
                 painter->drawRect(j*BLOCK_SIZE+40,i*BLOCK_SIZE+40,BLOCK_SIZE,BLOCK_SIZE);
             }
         }
@@ -178,15 +127,11 @@ void Widget::paintEvent(QPaintEvent *event)
     for(int i=0;i<4;i++)
         for(int j=0;j<4;j++)
             if(next_Block[i][j]==1)
-            {
-                painter->setBrush(QBrush(Qt::blue,Qt::SolidPattern));
                 painter->drawRect(440+20+BLOCK_SIZE*j,60+20+BLOCK_SIZE*i,BLOCK_SIZE,BLOCK_SIZE);
-            }
-
+    //painter->end();
 }
 void Widget::keyPressEvent(QKeyEvent *event)
 {
-
     switch(event->key())
     {
     case Qt::Key_Up:
@@ -210,59 +155,26 @@ void Widget::keyPressEvent(QKeyEvent *event)
 }
 void Widget::CreatBlock(int block[4][4],int ID)
 {
-    static const QColor color_table[7]={
-        QColor{200,0,0,100},QColor{255,200,0,100},QColor{0,0,200,100},
-        QColor{0,200,0,100},QColor{0,200,255,100},QColor{200,0,255,100},
-        QColor{150,100,100,100}
-        //Qt::red,Qt::yellow,Qt::green,Qt::blue,Qt::red,Qt::yellow,Qt::blue
-    };
-    QColor color=color_table[ID];
-
     switch(ID)
     {
     case 0:Block_Copy(block,item1);
-        cur_brush.setColor(color);
         break;
     case 1:Block_Copy(block,item2);
-        cur_brush.setColor(color);
         break;
     case 2:Block_Copy(block,item3);
-        cur_brush.setColor(color);
         break;
     case 3:Block_Copy(block,item4);
-        cur_brush.setColor(color);
         break;
     case 4:Block_Copy(block,item5);
-        cur_brush.setColor(color);
         break;
     case 5:Block_Copy(block,item6);
-        cur_brush.setColor(color);
         break;
     case 6:Block_Copy(block,item7);
-        cur_brush.setColor(color);
         break;
     default:
         break;
     }
-
-
 }
-/*void Widget::CreatColor(QBrush brushx, int color_id)
-{
-    switch(color_id)
-    {
-    case 0:brushx.setColor(Qt::red);
-        break;
-    case 1:brushx.setColor(Qt::blue);
-        break;
-    case 2:brushx.setColor(Qt::yellow);
-        break;
-    case 3:brushx.setColor(Qt::green);
-        break;
-    default:
-        break;
-    }
-}*/
 void Widget::BlockRotate(int block[4][4])
 {
     int temp[4][4];
@@ -271,7 +183,7 @@ void Widget::BlockRotate(int block[4][4])
         {
             temp[3-j][i]=block[i][j];//顺时针旋转
         }
-
+   // Block_Copy(block,temp);
     for(int i=0;i<4;i++)
         for(int j=0;j<4;j++)
         {
@@ -336,8 +248,6 @@ void Widget::StartGame()
     paint_timer=startTimer(refresh_ms);
     int block_id=rand()%7;
     CreatBlock(next_Block,block_id);
-//    int color_id=rand()%4;
-
     ResetBlock();
 }
 void Widget::InitGame()
@@ -349,81 +259,15 @@ void Widget::InitGame()
     refresh_ms=30;
     srand(time(0));
     score=0;
-/*    switch(gatex)
-    {
-    case 1:
-        QPixmap temp_pixmap1(":/new/prefix1/background/bg1.jpg");
-        pixmap=temp_pixmap1;
-        break;
-    case 2:
-        QPixmap temp_pixmap2(":/new/prefix1/background/bg2.jpg");
-        pixmap=temp_pixmap2;
-        break;
-    case 3:
-        QPixmap temp_pixmap3(":/new/prefix1/background/bg6.png");
-        pixmap=temp_pixmap3;
-        break;
-    case 4:
-        QPixmap temp_pixmap4(":/new/prefix1/background/bg7.png");
-        pixmap=temp_pixmap4;
-        break;
-    case 5:
-        QPixmap temp_pixmap5(":/new/prefix1/background/bg8.png");
-        pixmap=temp_pixmap5;
-        break;
-    default:
-        break;
-    }*/
-/*    if(gatex==1)
-    {
-        QPixmap temp_pixmap1(":/new/prefix1/background/bg1.jpg");
-        pixmap=temp_pixmap1;
-    }
-    else if(gatex==2)
-    {
-        QPixmap temp_pixmap2(":/new/prefix1/background/bg2.jpg");
-        pixmap=temp_pixmap2;
-    }
-    else if(gatex==3)
-    {
-        QPixmap temp_pixmap3(":/new/prefix1/background/bg6.png");
-        pixmap=temp_pixmap3;
-    }
-    else if(gatex==4)
-    {
-        QPixmap temp_pixmap4(":/new/prefix1/background/bg7.png");
-        pixmap=temp_pixmap4;
-    }
-    else if(gatex==5)
-    {
-        QPixmap temp_pixmap5(":/new/prefix1/background/bg8.png");
-        pixmap=temp_pixmap5;
-    }*/
     StartGame();
 }
-/*void Widget::InitGame2()
-{
-    for(int i=0;i<AREA_ROW;i++)
-        for(int j=0;j<AREA_COL;j++)
-            game_area[i][j]=0;
-    speed_ms=400;
-    refresh_ms=30;
-    srand(time(0));
-    score=0;
-    gate=2;
-    flag_gate=1;
-    StartGame();
-}*/
 void Widget::ResetBlock()//把当前的下一个方块给当前方块，并生成下一个下一个方块
 {
     Block_Copy(cur_Block,next_Block);
     cur_Border.GetBorder(next_Block);
-    cur_brush=next_brush;
 
     int block_id=rand()%7;
     CreatBlock(next_Block,block_id);
-    //int color_id=rand()%4;
-    //CreatColor(next_brush,color_id);
 
     block_pos start_point;
     start_point.pos_x=AREA_COL/2-2;
@@ -515,17 +359,17 @@ void Widget::BlockMove(Direction Dir)
                     game_area[pos_point.pos_y+i][pos_point.pos_x+j]=cur_Block[i][j];
         break;
    case SPACE:
-        while(pos_point.pos_y+cur_Border.dborder<AREA_ROW-1&&isCollide(pos_point.pos_x,pos_point.pos_y,DOWN)==0)
+        while(pos_point.pos_y+cur_Border.dborder<AREA_ROW-1&&isCollide(pos_point.pos_x,pos_point.pos_y,DOWN))
         {
-            for(int j=cur_Border.lborder;j<=cur_Border.rborder;j++)
+            for(int i=cur_Border.lborder;i<=cur_Border.rborder;i++)
             {
-                game_area[pos_point.pos_y][pos_point.pos_x+j]=0;//当前行全部清掉
+                game_area[pos_point.pos_y][pos_point.pos_x+i]=0;
             }
-            pos_point.pos_y+=1;//复制到下一行
+            pos_point.pos_y+=1;
             for(int i=0;i<4;i++)
-                for(int j=cur_Border.lborder;j<=cur_Border.rborder;j++)
+                for(int j=cur_Border.lborder;j<cur_Border.rborder;j++)
                 {
-                    if(pos_point.pos_y+i<AREA_ROW-1&&game_area[pos_point.pos_y+i][pos_point.pos_x+j]!=2)
+                    if(pos_point.pos_y+1<AREA_ROW-1&&game_area[pos_point.pos_y+i][pos_point.pos_x+j]!=2)
                         game_area[pos_point.pos_y+i][pos_point.pos_x+j]=cur_Block[i][j];
                 }
         }
@@ -556,22 +400,13 @@ void Widget::BlockMove(Direction Dir)
                 line_count++;//每次增加消行的行数
             }
         }
-        score+=line_count*800; //得分
-       if(score%500==0&&score!=0)
+        score+=line_count*10; //得分
+       if(score%50==0&&score!=0)
        {
-           speed_ms=800/(score/500);
+           speed_ms=800/(score/50+1);
            game_timer=startTimer(speed_ms);
-
        }
         //判断游戏是否结束
-      /* if(score>=1000)
-       {
-           QMessageBox::information(this,"Congratulations!","NEXT LEVEL");
-           gate+=1;
-           score=0;
-           InitGame();
-
-       }*/
         for(int j=0;j<AREA_COL;j++)
             if(game_area[0][j]==2) //最顶端也有稳定方块
                 GameOver();

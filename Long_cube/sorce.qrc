@@ -1,0 +1,16 @@
+<RCC>
+    <qresource prefix="/new/prefix1/button">
+        <file>button_start.png</file>
+        <file>button_stop.png</file>
+    </qresource>
+    <qresource prefix="/new/prefix1/background">
+        <file>bg6.png</file>
+        <file>bg1.jpg</file>
+        <file>bg2.jpg</file>
+        <file>bg7.png</file>
+        <file>bg8.png</file>
+    </qresource>
+    <qresource prefix="/new/prefix1/title">
+        <file>surface.ico</file>
+    </qresource>
+</RCC>
